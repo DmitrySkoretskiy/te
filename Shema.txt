@@ -1,0 +1,80 @@
+http://localhost:8080/pentaho/Login
+
+0
+
+
+you can download saiku from below link
+
+https://community.hitachivantara.com/external-link.jspa?url=https%3A%2F%2Fwww.meteorite.bi%2Fdownloads%2Fsaiku-plugin-p7.1-3.90.zip
+
+unzip the file, copy the folder and paste into below location
+
+pentaho-server\pentaho-solutions\system
+
+restart the pentaho BI server. after starting the server you will see saiku analytics under create new..!!!!
+
+Once you will click for the first time it will show you the pop-up follow the instructions.
+
+-- t.fact_sale definition
+
+-- Drop table
+
+-- DROP TABLE t.fact_sale;
+
+CREATE TABLE t.fact_sale (
+	store_sale numeric(12, 2) NULL,
+	id_dim_time int8 NULL,
+	id_dim_product int8 NULL,
+	id_dim_product_group int8 NULL,
+	CONSTRAINT dim_product_sale_fact_fk FOREIGN KEY (id_dim_product) REFERENCES t.dim_product(id_dim_product),
+	CONSTRAINT dim_time_sale_fact_fk FOREIGN KEY (id_dim_time) REFERENCES t.dim_time(id_dim_time),
+	CONSTRAINT product_group_sale_fact_fk FOREIGN KEY (id_dim_product_group) REFERENCES t.dim_product_group(id_dim_product_group)
+);
+
+-- t.dim_time definition
+
+-- Drop table
+
+-- DROP TABLE t.dim_time;
+
+CREATE TABLE t.dim_time (
+	id_dim_time bigserial NOT NULL,
+	the_date timestamp NULL,
+	the_day varchar(9) NULL,
+	the_month varchar(9) NULL,
+	the_year int8 NULL,
+	day_of_month int8 NULL,
+	month_of_year int8 NULL
+);
+CREATE INDEX idx_dim_time_lookup ON t.dim_time USING btree (the_date, the_day, the_month, the_year, day_of_month, month_of_year);
+CREATE UNIQUE INDEX idx_dim_time_pk ON t.dim_time USING btree (id_dim_time);
+
+-- t.dim_product_group definition
+
+-- Drop table
+
+-- DROP TABLE t.dim_product_group;
+
+CREATE TABLE t.dim_product_group (
+	id_dim_product_group bigserial NOT NULL,
+	product_group_id int8 NULL,
+	product_group_name varchar(50) NULL
+);
+CREATE INDEX idx_dim_product_group_lookup ON t.dim_product_group USING btree (product_group_id, product_group_name);
+CREATE UNIQUE INDEX idx_dim_product_group_pk ON t.dim_product_group USING btree (id_dim_product_group);
+
+
+-- t.dim_product definition
+
+-- Drop table
+
+-- DROP TABLE t.dim_product;
+
+CREATE TABLE t.dim_product (
+	id_dim_product bigserial NOT NULL,
+	product_id int8 NULL,
+	product_name varchar(100) NULL,
+	product_group_id int8 NULL
+);
+CREATE INDEX idx_dim_product_lookup ON t.dim_product USING btree (product_id, product_name, product_group_id);
+CREATE UNIQUE INDEX idx_dim_product_pk ON t.dim_product USING btree (id_dim_product);

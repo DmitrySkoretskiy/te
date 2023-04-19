@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postgres_demo:
+    container_name: postgres_demo
+    image: postgres:alpine3.17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sales
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dags:/opt/airflow/dags
